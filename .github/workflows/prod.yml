@@ -1,0 +1,24 @@
+name: TR2G1 PRODUCTION Deploy Actions
+run-name: ${{ github.actor }} is deploying Test Web on production ⭐
+on:
+  push:
+    branches:
+      - main
+jobs:
+  DEPLOY-WEB:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtaining repository code
+        uses: actions/checkout@v4
+
+      - name: Deploy Web
+        run: |
+          echo "Connecting to the server and deploying Web"
+          
+
+          cd ${{ github.workspace }}
+
+          echo "${{ secrets.PRO_SECRET_KEY }}" > ~/key
+          chmod 600 ~/key
+
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/key -r ./web/* ${{ secrets.PRO_USER }}@${{ secrets.PRO_HOST }}:./web/${{ secrets.DOMAIN }}/public_html
